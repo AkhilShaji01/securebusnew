@@ -5,7 +5,7 @@
             <div class="col-xl-6">
                   <!-- HTML5 Inputs -->
                   <div class="card mb-4">
-                    <h5 class="card-header">HTML5 Inputs</h5>
+                    <h5 class="card-header">Company Signup</h5>
                     <div class="card-body">
                         <form action="/companyadd" method="post">
                       <div class="mb-3 row">
@@ -23,7 +23,13 @@
                       <div class="mb-3 row">
                         <label for="html5-email-input" class="col-md-2 col-form-label">Email</label>
                         <div class="col-md-10">
-                          <input class="form-control" type="email" placeholder="john@example.com" id="html5-email-input" />
+                          <input class="form-control" type="email" placeholder="john@example.com" id="html5-email-input" name="email"/>
+                        </div>
+                      </div>
+                      <div class="mb-3 row">
+                        <label for="html5-password-input" class="col-md-2 col-form-label">Password</label>
+                        <div class="col-md-10">
+                          <input class="form-control" type="password" name="password" id="html5-password-input" />
                         </div>
                       </div>
                       <div class="mb-3 row">
@@ -34,28 +40,30 @@
                             type="url"
                             placeholder="eg: https://themeselection.com"
                             id="html5-url-input"
+                            name="url"
                           />
                         </div>
                       </div>
                       <div class="mb-3 row">
-                        <label for="html5-tel-input" class="col-md-2 col-form-label">Phone</label>
+                        <label for="html5-tel-input" class="col-md-2 col-form-label">Mobile</label>
                         <div class="col-md-10">
-                          <input class="form-control" type="tel"  id="html5-tel-input" />
+                          <input class="form-control" type="tel" maxlength="10" minlength="10" id="html5-tel-input" name="mobile"/>
+                        </div>
+                      </div>
+                      
+                      <div class="mb-3 row">
+                        <label for="html5-number-input" class="col-md-2 col-form-label">Office Phone</label>
+                        <div class="col-md-10">
+                          <input class="form-control" type="number" id="html5-number-input" name="officephone"/>
                         </div>
                       </div>
                       <div class="mb-3 row">
-                        <label for="html5-password-input" class="col-md-2 col-form-label">Password</label>
+                        <label for="html5-number-input" class="col-md-2 col-form-label">Office Address</label>
                         <div class="col-md-10">
-                          <input class="form-control" type="password" value="password" id="html5-password-input" />
+                          <input class="form-control" type="text" id="html5-number-input" name="address"/>
                         </div>
                       </div>
-                      <div class="mb-3 row">
-                        <label for="html5-number-input" class="col-md-2 col-form-label">Number</label>
-                        <div class="col-md-10">
-                          <input class="form-control" type="number" value="18" id="html5-number-input" />
-                        </div>
-                      </div>
-                      <div class="mb-3 row">
+                      {{!-- <div class="mb-3 row">
                         <label for="html5-datetime-local-input" class="col-md-2 col-form-label">Datetime</label>
                         <div class="col-md-10">
                           <input
@@ -89,8 +97,8 @@
                         <div class="col-md-10">
                           <input class="form-control" type="time" value="12:30:00" id="html5-time-input" />
                         </div>
-                      </div>
-                      <div class="mb-3 row">
+                      </div> --}}
+                      {{!-- <div class="mb-3 row">
                         <label for="html5-color-input" class="col-md-2 col-form-label">Color</label>
                         <div class="col-md-10">
                           <input class="form-control" type="color" value="#666EE8" id="html5-color-input" />
@@ -101,7 +109,14 @@
                         <div class="col-md-10">
                           <input type="range" class="form-range mt-3" id="html5-range" />
                         </div>
+                      </div> --}}
+                       <div class="row">
+                        {{!-- <label for="html5-range" class="col-md-2 col-form-label">Range</label> --}}
+                        <div class="col-md-10">
+                          <input type="submit" class="form-range mt-3" id="html5-range" value="Submit" />
+                        </div>
                       </div>
+
                       </form>
                     </div>
                   </div>

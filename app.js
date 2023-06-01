@@ -13,8 +13,9 @@ const handlebarHelper=require('./config/handlebar-helper')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var sadminRouter = require('./routes/sadmin');
 // var teacherRouter = require('./routes/teacher');
-// var superadminRouter = require('./routes/superadmin');
+
 // var instadminRouter=require('./routes/inst');
 // var studentRouter=require('./routes/student')
 // var driverRouter=require('./routes/driver');
@@ -43,9 +44,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-// app.use('/teacher',teacherRouter);
+app.use('/sadmin', sadminRouter)
 // app.use('/superadmin',superadminRouter);
+//app.use('/sadmin', sadminRouter);
+// app.use('/teacher',teacherRouter);
+
 // app.use('/inst',instadminRouter)
 // app.use('/student',studentRouter);
 // app.use('/driver',driverRouter);

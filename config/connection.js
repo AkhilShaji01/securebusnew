@@ -4,7 +4,7 @@ var connection =mysql.createConnection({
     user: 'admin',
     password: 'akhilsherin',
     port:3306,
-    database:'securebus'
+    database:'securebus2'
 });
 connection.connect(function(err){
     if(err){

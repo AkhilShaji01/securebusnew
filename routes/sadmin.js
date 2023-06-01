@@ -3,9 +3,9 @@ var router = express.Router();
 var db = require('../config/connection')
 const bcrypt = require('bcrypt')
 const saltRounds = 10;
-const dbHelper=require('../config/indexdb')
+const dbHelper=require('../config/sadmindb')
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/profile', function(req, res, next) {
   res.render('login', {login:true});
 });
 
@@ -27,19 +27,6 @@ router.post("/companyadd",(req,res)=>{
   })
 })
 router.post("/login",(req,res)=>{
-  dbHelper.login1(req.body).then((status1)=>{
-    if(status1[0]=='errorinlogin'){
-      res.redirect("/")
-    }
-    else{
-      if(status1[1]=='company'){
-        req.session.loggedin=true;
-        console.log("loginsucess")
-        console.log(status1)
-        req.session.data=status1[2];
-        console.log(req.session.data)
-      }
-    }
-  })
+  
 })
 module.exports = router;
