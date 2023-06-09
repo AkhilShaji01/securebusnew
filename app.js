@@ -16,7 +16,7 @@ var usersRouter = require('./routes/users');
 var sadminRouter = require('./routes/sadmin');
 // var teacherRouter = require('./routes/teacher');
 
-// var instadminRouter=require('./routes/inst');
+var instadminRouter=require('./routes/inst');
 // var studentRouter=require('./routes/student')
 // var driverRouter=require('./routes/driver');
 // var nodemcuRouter=require('./routes/node');
@@ -49,7 +49,7 @@ app.use('/sadmin', sadminRouter)
 //app.use('/sadmin', sadminRouter);
 // app.use('/teacher',teacherRouter);
 
-// app.use('/inst',instadminRouter)
+app.use('/inst',instadminRouter)
 // app.use('/student',studentRouter);
 // app.use('/driver',driverRouter);
 // app.use('/nodemcu',nodemcuRouter);

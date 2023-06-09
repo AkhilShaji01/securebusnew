@@ -95,6 +95,7 @@ module.exports={
                         if(err) {console.log("error");var status1=["errorinlogin",0];resolve(status1)}
                         else{
                                 //req.session.data=ress
+                                console.log("78787878")
                               var res1=ress
                               var status=['loginsucess','company',ress];
                               resolve(status)
@@ -107,11 +108,12 @@ module.exports={
                       db.query(sql1,[email],(err,ress)=>{
                         if(err) {console.log("error");var status1=["errorinlogin",0];resolve(status1)}
                         else{
-                          req.session.data=ress
-                          var res1=ress
+                          
+                          var res1=ress;
+                          console.log("78787878")
                               console.log(res1)
                               //res.redirect("/inst/profile")
-                              var status=['loginsucess','institution'];
+                              var status=['loginsucess','institution',ress];
                               resolve(status)
                       }
                     })
@@ -176,13 +178,13 @@ module.exports={
                   else
                     {
                       console.log("752387563745")
-                      req.session.logerror=true;
-                     res.redirect('/');
+                      
+                      var status1=["errorinlogin",0];resolve(status1)
                    }
                 }
                 else{
                   req.session.logerror=true;
-                  res.redirect('/')
+                  var status1=["errorinlogin",0];resolve(status1)
                   }
                 }
               })

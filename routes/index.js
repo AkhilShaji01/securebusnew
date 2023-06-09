@@ -12,6 +12,9 @@ router.get('/', function(req, res, next) {
 router.get('/signup', function(req, res, next) {
   res.render('signup', { title: 'Express' });
 });
+router.get('/index', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
 router.post("/companyadd",(req,res)=>{
   dbHelper.addcompany(req.body).then((status1)=>{
     if(status1='errorinadding')
@@ -33,13 +36,26 @@ router.post("/login",(req,res)=>{
     }
     else{
       if(status1[1]=='company'){
-        req.session.loggedin=true;
+        req.session.loggedIn=true;
         console.log("loginsucess")
         console.log(status1)
         req.session.data=status1[2];
         console.log(req.session.data)
+        res.redirect("/sadmin/dashboard")
+      }
+      else if(status1[1]=='institution')
+      {
+        req.session.loggedIn=true;
+        console.log("loginsucess")
+        console.log(status1)
+        req.session.data=status1[2];
+        res.redirect("/inst/dashboard")
       }
     }
   })
+})
+router.get('/logout',(req,res)=>{
+  req.session.destroy();
+  res.redirect('/')
 })
 module.exports = router;
