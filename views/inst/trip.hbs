@@ -35,7 +35,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
-
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
     <!-- CSS file for DataTables -->
@@ -73,6 +73,10 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../assets/js/config.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       
+   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
   </head>
 
   <body>
@@ -80,6 +84,11 @@
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
+        {{#if dt}}
+        <script>
+            alert("error in deleting department")
+        </script>
+        {{/if}}
 
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo">
@@ -168,7 +177,7 @@
               <ul class="menu-sub">
                 <li class="menu-item">
                   <a href="/inst/bus" class="menu-link">
-                    <div data-i18n="Without menu">Bus</div>
+                    <div data-i18n="Without menu">BUS</div>
                   </a>
                 </li>
                 <li class="menu-item">
@@ -177,13 +186,13 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/inst/academics" class="menu-link">
-                    <div data-i18n="Container">Academics</div>
+                  <a href="layouts-container.html" class="menu-link">
+                    <div data-i18n="Container">Container</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/inst/trip" class="menu-link">
-                    <div data-i18n="Fluid">Trip</div>
+                  <a href="layouts-fluid.html" class="menu-link">
+                    <div data-i18n="Fluid">Fluid</div>
                   </a>
                 </li>
                 <li class="menu-item">
@@ -651,20 +660,23 @@
                                 <i class="bx bx-dots-vertical-rounded"></i>
                               </button>
                               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                 <a class="dropdown-item" href="/inst/addbus">ADD BUS</a>
+                                 <a class="dropdown-item" href="/inst/addtrip">Add Trip</a>
                                 {{!-- <a class="dropdown-item" href="javascript:void(0);">View More</a>
                                 <a class="dropdown-item" href="javascript:void(0);">Delete</a> --}}
                               </div>
                             </div>
                           </div>
-                          <span class="fw-semibold d-block mb-1">Bus</span>
-                          <h3 class="card-title mb-2">{{len}}</h3>
+                          <span class="fw-semibold d-block mb-1">Trip</span>
+
+                          <h3 class="card-title mb-2"></h3>
                           {{!-- <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +72.80%</small> --}}
+                            <small class="text-success fw-semibold">{{lenac}}</small>
                         </div>
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-12 col-6 mb-4">
-                      {{!-- <div class="card">
+                        
+                      <div class="card">
                         <div class="card-body">
                           <div class="card-title d-flex align-items-start justify-content-between">
                             <div class="avatar flex-shrink-0">
@@ -686,22 +698,127 @@
                                 <i class="bx bx-dots-vertical-rounded"></i>
                               </button>
                               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                                <a class="dropdown-item" href="/inst/addclass">Add class</a>
+                                <button onclick="showdel()" class="dropdown-item">Delete</button>
                               </div>
                             </div>
                           </div>
-                          <span>Sales</span>
-                          <h3 class="card-title text-nowrap mb-1">$4,679</h3>
-                          <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +28.42%</small>
+                          <span>Class</span>
+                          <h3 class="card-title mb-2"></h3>
+                          {{!-- <h3 class="card-title text-nowrap mb-1">$4,679</h3>--}}
+                          {{!-- <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> {{lend}}</small> --}}
+                          <small class="text-success fw-semibold">{{lenclas}}</small>
                         </div>
-                      </div> --}}
+                      </div>
                     </div>
                   </div>
                 </div>
                 </div>
                 <!----------------------------------------->
-                
+                <div class="delitemdep" id="delitemdep" style="display: none; z-index:1;position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);">
+                     <div class="card1" style="position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fefefe;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 500px;">
+                        <div class="card-body1">
+                          <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0">
+                                Department
+                              {{!-- <img
+                                src="../assets/img/icons/unicons/wallet-info.png"
+                                alt="Credit Card"
+                                class="rounded"
+                              /> --}}
+                            </div>
+                            <div class="dropdown">
+                              {{!-- <button
+                                class="btn p-0"
+                                type="button"
+                                id="cardOpt6"
+                                data-bs-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                              >
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                                <button onclick="closedel()" class="dropdown-item">close</button>
+                                
+                              </div> --}}
+                              
+                              <box-icon name='window-close' onclick="closedel()"><iconify-icon icon="material-symbols:close" rotate="180deg"></iconify-icon></box-icon>
+                            </div>
+                          </div>
+                          
+                          <ul class="p-0 m-0">
+                        {{#each clas}}
+                        <li class="d-flex mb-4 pb-1">
+                          {{!-- <div class="avatar flex-shrink-0 me-3">
+                            <img src="../assets/img/icons/unicons/dep.png" alt="User" class="rounded" />
+                          </div> --}}
+                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                              {{!-- <small class="text-muted d-block mb-1">Paypal</small> --}}
+                              {{!-- <h6 class="mb-0" onclick="showConfirmation()">  </h6> --}}
+                              <form action="/inst/deleteclass" method="post" id="myFormdelclass"><input type="text" name="classid" id="" value="{{this.classid}}" hidden><input type="text" name="classname" id="" value="{{this.classname}}" hidden><input type="text" name="departmentid" id="" value="{{this.departmentid}}" hidden><input type="submit" value="{{this.classname}}" class="dropdown-item" onclick="showConfirmation1()"></form>
+                            </div>
+                            {{!-- <div class="user-progress d-flex align-items-center gap-1">
+                              <h6 class="mb-0">+82.6</h6>
+                              <span class="text-muted">USD</span>
+                            </div> --}}
+                          </div>
+                        </li>
+                        {{/each}}
+                        
+                        
+                      </ul>
+                          {{!-- <h3 class="card-title text-nowrap mb-1">$4,679</h3>
+                          <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +28.42%</small> --}}
+                        </div>
+                      </div>
+                </div>
+                <script>
+                    function showdel() {
+  document.getElementById('delitemdep').style.display = 'block';
+} 
+
+                        function showConfirmation() {
+                          if (confirm("Are you sure you want to delete the department?")) {
+                            // User clicked "OK" - form submission proceeds
+                            document.getElementById("myFormdeldepartment").submit();
+                          } else {
+                            // User clicked "Cancel" - form submission is cancelled
+                            event.preventDefault();
+                          }
+                        }
+                        function showConfirmation1() {
+                          if (confirm("Are you sure you want to delete the class?")) {
+                            // User clicked "OK" - form submission proceeds
+                            document.getElementById("myFormdelclass").submit();
+                          } else {
+                            // User clicked "Cancel" - form submission is cancelled
+                            event.preventDefault();
+                          }
+                        }
+ function closedel() {
+  document.getElementById('delitemdep').style.display = 'none';
+}              
+
+ 
+
+
+ </script>
                 <!------------------------------------------------------------------------->
               {{!-- <div class="row">
                 
@@ -1136,26 +1253,47 @@
                 </div> --}}
                 <!--/ Transactions -->
                 <div class="row">
-                  <div class="col-lg-8 mb-4 order-0">
-                  <div class="card">
-                    <div class="d-flex align-items-end row">
-                      
-                        <div class="table-responsive text-nowrap">
-                  <table class="table">
+                  <div class="col-lg-8 mb-4 order-0" style="overflow: auto;">
+                  <div class="card" style="overflow: auto;">
+                    <div class="" >
+                      <div id="noResultsMessage" style="display: none;">No Results</div>
+
+                <div class="table-responsive text-nowrap" style="display: inline-block;">
+                                          {{!-- <input type="text" id="searchInput" class="form-control" placeholder="Search"> --}}
+                    <script>
+    $(document).ready(function() {
+  var table = $('#teachersTable').DataTable();
+
+  // Add a label and input element for the DataTables search bar
+  $('#teachersTable_filter').prepend('<label>Search:<input type="search" id="datatableSearch" class="form-control form-control-sm" placeholder="" aria-controls="teachersTable"></label>');
+
+  // Handle keyup event on the DataTables search input
+  $('#datatableSearch').on('keyup', function() {
+    table.search(this.value).draw();
+  });
+});
+
+    </script>
+                  <table class="table" id="teachersTable">
                     <thead>
                       <tr>
                         <th>Name</th>
-                        <th>Location</th>
-                        <th>Action</th>
-                        <th>Fee Status</th>
-                        <th>Time</th>
+                        <th>start Place</th>
+                        <th>End Place</th>
+                        <th>Assigned Bus</th>
+                        <th>Options</th>
+                        {{!-- <th>Email</th>
+                        <th>Mobile</th> --}}
+                        {{!-- <th>Time</th> --}}
                       </tr>
                     </thead>
-                    <tbody class="table-border-bottom-0">
+                    <tbody class="table-border-bottom-0" id="dtt">
+                      {{#each trip}}
                       <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>Angular Project</strong></td>
-                        <td>Albert Cook</td>
-                        <td>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>{{this.tripname}}</strong></td>
+                        <td>{{this.startplace}}</td>
+                        <td>{{this.stopplace}}</td>
+                        {{!-- <td>
                           <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
                             <li
                               data-bs-toggle="tooltip"
@@ -1185,9 +1323,24 @@
                               <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" />
                             </li>
                           </ul>
-                        </td>
-                        <td><span class="badge bg-label-primary me-1">Active</span></td>
+                        </td> --}}
+                        {{!-- <td>{{this.email}}</td>
+                        <td>{{this.mobile}}</td> --}}
                         <td>
+                          <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                              <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                               <form action="/inst/assignbus" method="post"><input type="text" name="tripid" id="" value="{{this.tripid}}" hidden><input type="text" name="tripname" id="" value="{{this.tripname}}" hidden><input type="submit" value="Assign Bus" class="dropdown-item"></form>
+                                <form action="/inst/deleteassignbus" method="post"><input type="text" name="tripid" id="" value="{{this.tripid}}" hidden><input type="submit" value="Remove the assigned bus" class="dropdown-item"></form>
+                              <form action="/inst/deletetrip" method="post" id="myFormdelclass"><input type="text" name="tripid" id="" value="{{this.tripid}}" hidden><input type="submit" value="Delete" class="dropdown-item" onclick="showConfirmation1()"></form>
+                              
+                            </div>
+                          </div>
+                        </td>
+                        {{!-- <td><span class="badge bg-label-primary me-1">Active</span></td> --}}
+                        {{!-- <td>
                           <div class="dropdown">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                               <i class="bx bx-dots-vertical-rounded"></i>
@@ -1201,9 +1354,10 @@
                               >
                             </div>
                           </div>
-                        </td>
+                        </td> --}}
                       </tr>
-                      <tr>
+                      {{/each}}
+                      {{!-- <tr>
                         <td><i class="fab fa-react fa-lg text-info me-3"></i> <strong>React Project</strong></td>
                         <td>Barry Hunter</td>
                         <td>
@@ -1357,7 +1511,7 @@
                             </div>
                           </div>
                         </td>
-                      </tr>
+                      </tr> --}}
                     </tbody>
                   </table>
                 </div>
@@ -1370,7 +1524,7 @@
                   <div class="col-md-6 col-lg-4 order-2 mb-4">
                   <div class="card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between">
-                      <h5 class="card-title m-0 me-2">Transactions</h5>
+                      <h5 class="card-title m-0 me-2">Departments</h5>
                       <div class="dropdown">
                         <button
                           class="btn p-0"
@@ -1383,34 +1537,17 @@
                           <i class="bx bx-dots-vertical-rounded"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID">
-                          <a class="dropdown-item" href="javascript:void(0);">Last 28 Days</a>
+                          <a class="dropdown-item" href="/inst/adddepartment">Add Department</a>
                           <a class="dropdown-item" href="javascript:void(0);">Last Month</a>
                           <a class="dropdown-item" href="javascript:void(0);">Last Year</a>
                         </div>
                       </div>
                     </div>
                     <div class="card-body">
-                      <ul class="p-0 m-0">
-                        {{#each dt}}
-                        <li class="d-flex mb-4 pb-1">
-                          <div class="avatar flex-shrink-0 me-3">
-                            <img src="../assets/img/icons/unicons/bus.jpg" alt="User" class="rounded" />
-                          </div>
-                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                              {{!-- <small class="text-muted d-block mb-1">Paypal</small> --}}
-                              <h6 class="mb-0">{{this.busnumber}}-{{this.regnumber}}</h6>
-                            </div>
-                            {{!-- <div class="user-progress d-flex align-items-center gap-1">
-                              <h6 class="mb-0">+82.6</h6>
-                              <span class="text-muted">USD</span>
-                            </div> --}}
-                          </div>
-                        </li>
-                        {{/each}}
-                        
-                        
-                      </ul>
+                      
+                      {{#each dp}}
+                        <button class="dropdown-item" onclick="fetchTeachersByDepartment('{{this.departmentid}}')">{{this.name}}</button>
+                      {{/each}}
                     </div>
                   </div>
                 </div>
@@ -1419,6 +1556,68 @@
               </div>
             </div>
             <!-- / Content -->
+          <script>
+  // Get reference to the departments list and teachers table
+  const departmentsList = document.getElementById('departmentsList');
+  const teachersTable = document.getElementById('teachersTable');
+
+ // departmentsList.addEventListener('click', function(event) {
+  //  const clickedElement = event.target;
+   // if (clickedElement.classList.contains('departmentItem')) {
+   //   const department = clickedElement.getAttribute('data-department');
+      
+      // Call the API endpoint to fetch teachers based on the selected department
+    //  fetchTeachersByDepartment(parseInt(department));
+   // }
+  //});
+
+  function fetchTeachersByDepartment(department) {
+    const url = `/inst/getclass/${department}`;
+    
+  const dttr = document.getElementById("dtt");
+    // Make an AJAX request to the API endpoint
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        // Clear previous teachers data
+        let dtt1='';
+        
+        dttr.innerHTML = dtt1;
+        
+        data.forEach(function(teacher) {
+          dtt1 += `<tr>
+          <td>${teacher.classname}</td>
+          <td>${teacher.teachername}</td>
+          <td>${teacher.departmentname}</td>
+          <td>
+                          <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                              <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                              <form action="/inst/assignclass" method="post"><input type="text" name="departmentid" id="" value="${teacher.departmentid}" hidden><input type="text" name="classid" id="" value="${teacher.classid}" hidden><input type="text" name="classname" id="" value="${teacher.classname}" hidden><input type="submit" value="Assign class" class="dropdown-item"></form>
+                              <form action="/inst/deleteassign" method="post"><input type="text" name="departmentid" id="" value="${teacher.departmentid}" hidden><input type="text" name="classid" id="" value="${teacher.classid}" hidden><input type="text" name="classname" id="" value="${teacher.classname}" hidden><input type="submit" value="Remove assign" class="dropdown-item"></form>
+                              <form action="/inst/deleteclass" method="post" id="myFormdelteacher"><input type="text" name="classid" id="" value="${teacher.classid}" hidden><input type="text" name="departmentid" id="" value="${teacher.departmentid}" hidden><input type="submit" value="Delete" class="dropdown-item" onclick="showConfirmation1()"></form>
+                              
+                            </div>
+                          </div>
+                        </td>
+        </tr>
+        `;
+        dttr.innerHTML=dtt1;
+        
+        
+
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching teachers:', error);
+        // Handle error appropriately, e.g., display an error message to the user
+      });
+  }
+</script>
+           
+
 
             <!-- Footer -->
             <footer class="content-footer footer bg-footer-theme">
@@ -1496,8 +1695,8 @@
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     
-    <script>
-
+    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
   </body>

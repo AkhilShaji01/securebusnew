@@ -539,4 +539,657 @@ delbus:(data)=>{
         
         
         },
+
+
+        addacademicyear:(res1,data)=>{
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            console.log(data)
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            var name=data.startyear+" - "+data.endyear;
+            var value1;
+            var startdate=data.startyear+"-07-01";
+                var enddate=data.endyear+"-06-30";
+                if(date>=startdate && date<=enddate)
+                {
+                    value1=[[name,data.startyear,data.endyear,'present',res1[0].institutionid]]
+                }
+                else if(date<=startdate)
+                {
+                    value1=[[name,data.startyear,data.endyear,'future',res1[0].institutionid]]
+                }
+                else if(date>=enddate)
+                {
+                    value1=[[name,data.startyear,data.endyear,'past',res1[0].institutionid]]
+                }
+            return new Promise((resolve,reject)=>{
+                
+                var sq="insert into academicyear (name,startyear,stopyear,status,institutionid) values ?";
+                db.query(sq,[value1],(errt,resst)=>{
+                    if(errt){
+                        console.log(errt);
+                        var status="errorinadding"
+                        resolve(status)
+                    }
+                    else{
+                        dt=resst;
+                        var status="added"
+                        resolve(status) 
+                    }
+                })
+                 
+            })
+        
+        
+        },
+
+        getaddclasspage:(res1)=>{
+            var insti=parseInt(res1[0].institutionid)
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            
+            return new Promise((resolve,reject)=>{
+                var dp;
+                var sem;
+                var batch;
+                var sql='SELECT * FROM department where institutionid = ?'
+                db.query(sql,[insti],(errtg,resstg)=>{
+                    if(errtg)
+                    {
+                        console.log(errtg)
+                    }
+                    else
+                    {
+                        if(resstg.length>0)
+                        {
+                            dp=resstg;
+                        }
+                    }
+                })
+                var sqlsem='SELECT * FROM semester'
+                db.query(sqlsem,[insti],(errsem,resssem)=>{
+                    if(errsem)
+                    {
+                        console.log(errtsem)
+                    }
+                    else
+                    {
+                        if(resssem.length>0)
+                        {
+                            sem=resssem;
+                        }
+                    }
+                })
+                var sqlbatch='SELECT * FROM batch'
+                db.query(sqlbatch,[insti],(errbatch,ressbatch)=>{
+                    if(errbatch)
+                    {
+                        console.log(errbatch)
+                    }
+                    else
+                    {
+                        if(ressbatch.length>0)
+                        {
+                            batch=ressbatch;
+                        }
+                    }
+                })
+                
+                var sq="select * from academicyear where institutionid= ?";
+                db.query(sq,[res1[0].institutionid],(errt,resst)=>{
+                    if(errt){
+                        console.log(errt);
+                        var status=["erroringetting",dp,sem,batch]
+                        resolve(status)
+                    }
+                    else{
+                        ac=resst;
+                        var status=[ac,dp,sem,batch]
+                        resolve(status) 
+                    }
+                })
+                 
+            })
+        
+        
+        },
+
+        addclass:(res1,data)=>{
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            //console.log(data)
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            var [acid,acname]=data.academicyearid.split(",");
+            var [semid,semname]=data.semesterid.split(",");
+            var [batchid,batchname]=data.batchid.split(",");
+            var [depid,depname]=data.departmentid.split(",");
+            if(batchid=='nil'){var batchid1="";batchname=""}
+            else{
+            var batchid1=parseInt(batchid);}
+            var name=semname+"-"+depname+" "+batchname;
+            var semid1=parseInt(semid)
+            
+            
+            var acid1=parseInt(acid)
+            var depid1=parseInt(depid)
+            var value1=[[name,semid1,batchid1,acid1,depid1,'active',res1[0].institutionid]]
+            return new Promise((resolve,reject)=>{
+                
+                var sq="insert into class (classname,semesterid,batchid,academicyearid,departmentid,status,institutionid) values ?";
+                db.query(sq,[value1],(errt1,resst)=>{
+                    if(errt1){
+                        var status="errorinadding"
+                        resolve(status)
+                    }
+                    else{
+                        dt=resst;
+                        var status="added"
+                        resolve(status) 
+                    }
+                })
+                 
+            })
+        
+        
+        },
+        getacademicpage:(res1)=>{
+            var insti=parseInt(res1[0].institutionid)
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            
+            return new Promise((resolve,reject)=>{
+                var clas;
+                var clas1;
+                var ac;
+                var batch;
+                var sem;
+                var sql="SELECT class.*, teacher.name as teachername, department.departmentid, department.name as departmentname,academicyear.name as academicyear FROM class inner join department on department.departmentid=class.departmentid inner join academicyear on academicyear.academicyearid=class.academicyearid left join teacher on teacher.teacherid=class.teacherid where class.institutionid = ? and academicyear.status='present'"
+                db.query(sql,[insti],(errtg,resstg)=>{
+                    if(errtg)
+                    {
+                        console.log(errtg)
+                    }
+                    else
+                    {
+                        clas=resstg
+                        
+                    }
+                })
+                
+                var sqlsem='SELECT * FROM academicyear where institutionid=?'
+                db.query(sqlsem,[insti],(errsem,resssem)=>{
+                    if(errsem)
+                    {
+                        console.log(errsem)
+                    }
+                    else
+                    {
+                        if(resssem.length>0)
+                        {
+                            ac=resssem;
+                        }
+                    }
+                })
+                var sqlbatch='SELECT * FROM batch'
+                db.query(sqlbatch,[insti],(errbatch,ressbatch)=>{
+                    if(errbatch)
+                    {
+                        console.log(errbatch)
+                    }
+                    else
+                    {
+                        if(ressbatch.length>0)
+                        {
+                            batch=ressbatch;
+                        }
+                    }
+                })
+                var sqls='SELECT * FROM semester'
+                db.query(sqls,[insti],(errbatch1,ressbatch1)=>{
+                    if(errbatch1)
+                    {
+                        console.log(errbatch1)
+                    }
+                    else
+                    {
+                        if(ressbatch1.length>0)
+                        {
+                            sem=ressbatch1;
+                        }
+                    }
+                })
+                
+                var sq="select * from department where institutionid= ?";
+                db.query(sq,[res1[0].institutionid],(errt,resst)=>{
+                    if(errt){
+                        console.log(errt);
+                        var status=["erroringetting",ac,clas,clas1,sem,batch]
+                        resolve(status)
+                    }
+                    else{
+                        dp=resst;
+                        var status=[dp,ac,clas,clas1,sem,batch]
+                        resolve(status) 
+                    }
+                })
+                 
+            })
+        
+        
+        },
+
+        clasdel:(res1,data)=>{
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            console.log(data.classid)
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            
+            return new Promise((resolve,reject)=>{
+                
+                var sq="DELETE FROM class WHERE classid = ?";
+                db.query(sq,[data.classid],(errt,resst)=>{
+                    if(errt){
+                        console.log(errt);
+                        var status="deletingerror"
+                        resolve(status)
+                    }
+                    else{
+                        dt=resst;
+                        var status="deleted"
+                        resolve(status) 
+                    }
+                })
+                 
+            })
+        
+        
+        },
+
+        getassignteacher:(res1,data)=>{
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            console.log(data.classid)
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            
+            return new Promise((resolve,reject)=>{
+                
+                var sq="SELECT * FROM teacher WHERE teacherid NOT IN (SELECT teacherid FROM class) and departmentid=? and institutionid=?";
+                db.query(sq,[data.departmentid,res1[0].institutionid],(errt,resst)=>{
+                    if(errt){
+                        console.log(errt);
+                        var status="gettingerror"
+                        resolve(status)
+                    }
+                    else{
+                        dt=resst;
+                        if(resst.length>0){
+                        console.log(resst)
+                        var status=resst;
+                        resolve(status)}
+                        else{
+                            var status="noteachers";
+                            resolve(status)
+                        } 
+                    }
+                })
+                 
+            })
+        
+        
+        },
+
+        assignclass:(res1,data)=>{
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            console.log(data.classid)
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            
+            return new Promise((resolve,reject)=>{
+                
+                var sq="update class set teacherid=? where classid=? and institutionid=?";
+                db.query(sq,[data.teacherid,data.classid,res1[0].institutionid],(errt,resst)=>{
+                    if(errt){
+                        console.log(errt);
+                        var status="assigningerror"
+                        resolve(status)
+                    }
+                    else{
+                        dt=resst;
+                        console.log(resst)
+                        var status='assigned';
+                        resolve(status) 
+                    }
+                })
+                 
+            })
+        
+        
+        },
+        delassign:(res1,data)=>{
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            console.log(data.classid)
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            
+            return new Promise((resolve,reject)=>{
+                
+                var sq="update class set teacherid=NULL where classid=? and institutionid=?";
+                db.query(sq,[data.classid,res1[0].institutionid],(errt,resst)=>{
+                    if(errt){
+                        console.log(errt);
+                        var status="assigningerror"
+                        resolve(status)
+                    }
+                    else{
+                        dt=resst;
+                        console.log(resst)
+                        var status='assigned';
+                        resolve(status) 
+                    }
+                })
+                 
+            })
+        
+        
+        },
+        addtrip:(res1,data)=>{
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            //console.log(data)
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            var name=data.startplace+" - "+data.endplace;
+            var type=1
+            var value1=[[name,data.startplace,data.startplacelatitude,data.startplacelongitude,data.endplace,data.endplacelatitude,data.endplacelongitude,type,res1[0].institutionid,'active']]
+            return new Promise((resolve,reject)=>{
+                
+                var sq="insert into trip (tripname,startplace,startplacelatitude,startplacelongitude,stopplace,stopplacelatitude,stopplacelongitude,type,institutionid,status) values ?";
+                db.query(sq,[value1],(errt1,resst)=>{
+                    if(errt1){
+                        console.log(errt1)
+                        var status="errorinadding"
+                        resolve(status)
+                    }
+                    else{
+                        dt=resst;
+                        tri=resst.insertId;
+                        console.log(dt)
+                        var name1=data.endplace+" - "+data.startplace;
+                        var type1=2;
+                        var value2=[[name1,data.endplace,data.endplacelatitude,data.endplacelongitude,data.startplace,data.startplacelatitude,data.startplacelongitude,tri,type1,res1[0].institutionid,'active']]
+                        var sq1="insert into trip (tripname,startplace,startplacelatitude,startplacelongitude,stopplace,stopplacelatitude,stopplacelongitude,oppositesidetripid,type,institutionid,status) values ?";
+                        db.query(sq1,[value2],(errt2,resst2)=>{
+                            if(errt2){
+                                console.log(errt1)
+                                var status="errorinadding"
+                                resolve(status)
+                            }
+                            else
+                            {
+                                console.log(resst2);
+                                tri1=resst2.insertId;
+                                var we="update trip set oppositesidetripid=? where tripname=?";
+                                db.query(we,[tri1,name],(y,t)=>{
+                                    if(y){
+                                        console.log(y)
+                                    }
+                                    else{console.log(t)}
+                                })
+                                var status="added"
+                                resolve(status)
+                            }
+                        })
+                         
+                    }
+                })
+                 
+            })
+        
+        
+        },
+        gettrippage:(res1)=>{
+            var insti=parseInt(res1[0].institutionid)
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            
+            return new Promise((resolve,reject)=>{
+                var clas;
+                var clas1;
+                var ac;
+                var batch;
+                var sem;
+                //var sql="SELECT class.*, teacher.name as teachername, department.departmentid, department.name as departmentname,academicyear.name as academicyear FROM class inner join department on department.departmentid=class.departmentid inner join academicyear on academicyear.academicyearid=class.academicyearid left join teacher on teacher.teacherid=class.teacherid where class.institutionid = ? and academicyear.status='present'"
+                var sql="select * from trip where institutionid=?"
+                db.query(sql,[insti],(errtg,resstg)=>{
+                    if(errtg)
+                    {
+                        console.log(errtg)
+                    }
+                    else
+                    {
+                        trip=resstg
+                        
+                    }
+                })
+                
+                var sqlsem='SELECT * FROM academicyear where institutionid=?'
+                db.query(sqlsem,[insti],(errsem,resssem)=>{
+                    if(errsem)
+                    {
+                        console.log(errsem)
+                    }
+                    else
+                    {
+                        if(resssem.length>0)
+                        {
+                            ac=resssem;
+                        }
+                    }
+                })
+                var sqlbatch='SELECT * FROM batch'
+                db.query(sqlbatch,[insti],(errbatch,ressbatch)=>{
+                    if(errbatch)
+                    {
+                        console.log(errbatch)
+                    }
+                    else
+                    {
+                        if(ressbatch.length>0)
+                        {
+                            batch=ressbatch;
+                        }
+                    }
+                })
+                var sqls='SELECT * FROM semester'
+                db.query(sqls,[insti],(errbatch1,ressbatch1)=>{
+                    if(errbatch1)
+                    {
+                        console.log(errbatch1)
+                    }
+                    else
+                    {
+                        if(ressbatch1.length>0)
+                        {
+                            sem=ressbatch1;
+                        }
+                    }
+                })
+                
+                var sq="select * from department where institutionid= ?";
+                db.query(sq,[res1[0].institutionid],(errt,resst)=>{
+                    if(errt){
+                        console.log(errt);
+                        var status=["erroringetting",ac,trip,sem,batch]
+                        resolve(status)
+                    }
+                    else{
+                        dp=resst;
+                        var status=[dp,ac,trip,sem,batch]
+                        resolve(status) 
+                    }
+                })
+                 
+            })
+        
+        
+        },
+
+        getassignbus:(res1,data)=>{
+            //console.log(encryptpassword)
+            // var password=data.password
+            //         console.log(data.password)
+            //         var encryptpassword= await bcrypt.hash(password,saltRounds);
+            //         console.log(encryptpassword)
+            var type=0;
+            var date_ob = new Date();
+            var day = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
+            var date = year + "-" + month + "-" + day;
+            console.log(data.classid)
+            // const user=[[data.institutioncode,data.name,data.mobile,data.officephone,data.address,data.email,data.website,data.contactname,data.contactmobile,data.contactemail,date,'active']]
+            
+            //console.log(louser)
+            
+            return new Promise((resolve,reject)=>{
+                
+                var sq="SELECT * FROM bus WHERE institutionid=?";
+                db.query(sq,[res1[0].institutionid],(errt,resst)=>{
+                    if(errt){
+                        console.log(errt);
+                        var status="gettingerror"
+                        resolve(status)
+                    }
+                    else{
+                        dt=resst;
+                        if(resst.length>0){
+                        console.log(resst)
+                        var status=resst;
+                        resolve(status)}
+                        else{
+                            var status="nobus";
+                            resolve(status)
+                        } 
+                    }
+                })
+                 
+            })
+        
+        
+        },
 }

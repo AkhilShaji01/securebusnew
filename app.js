@@ -9,6 +9,7 @@ var hbs=require('express-handlebars');
 //var fileUpload=require('express-fileupload');
 var session=require('express-session');
 var db=require('./config/connection')
+var up=require('./config/updat')
 const handlebarHelper=require('./config/handlebar-helper')
 
 var indexRouter = require('./routes/index');
@@ -21,11 +22,12 @@ var instadminRouter=require('./routes/inst');
 // var driverRouter=require('./routes/driver');
 // var nodemcuRouter=require('./routes/node');
 var app = express();
-
+const updateIntervalMs = 100000;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-
+setInterval(() => {
+up.updateacademicyear()}, updateIntervalMs);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

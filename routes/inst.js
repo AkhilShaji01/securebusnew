@@ -415,7 +415,7 @@ router.post("/addteacher",verifyLogin,(req,res)=>{
     }
     else if(status1=='entredintologin')
     {
-      res.redirect("/inst/addteacher")
+      res.redirect("/inst/teacher")
     }
   })
 })
@@ -435,5 +435,315 @@ router.get("/teachers/:id",verifyLogin,(req,res)=>{
       console.log(results)
     }
   });
+})
+
+router.get("/academics",verifyLogin,(req,res)=>{
+  res1=req.session.data;
+  var dt=false;
+  dt=req.session.deldeperror;
+  req.session.deldeperror=false
+  dbHelper.getacademicpage(res1).then((status1)=>{
+    if(status1[0]=="erroringetting")
+    {
+      ac=status1[1];
+      clas=status1[2];
+      sem=status1[3];
+      batch=status1[4]
+      lenac=ac.length
+      lenclas=clas.length
+      res.render("inst/academics",{res1,dt,teac,clas,sem,batch,lenac,lenclas,})
+    }
+    else{
+      var dp=status1[0];
+      ac=status1[1];
+      clas=status1[2];
+      sem=status1[3];
+      batch=status1[4]
+      lenac=ac.length
+      lenclas=clas.length
+      res.render("inst/academics",{res1,dp,ac,clas,sem,batch,lenac,lenclas,dt})
+    }
+  })
+  
+})
+router.get("/addacademicyear",verifyLogin,(req,res)=>{
+  res1=req.session.data;
+  if(req.session.addacademicsyearerror){
+    errerdata="Error in adding academic year please try again";
+    res.render("inst/addacademicyear",{res1,errerdata})
+    req.session.addacademicyearerror=false
+  }
+  else{
+    res.render("inst/addacademicyear",{res1})
+  }
+  
+})
+router.post("/addacademicyear",verifyLogin,(req,res)=>{
+  res1=req.session.data
+  dbHelper.addacademicyear(res1,req.body).then((status1)=>{
+    if(status1=="addingerror")
+    {
+      req.session.addacademicyearerror=true;
+      res.redirect("/inst/addacademicyear")
+    }
+    else if(status1=="added")
+    {
+      res.redirect("/inst/academics")
+    }
+  })
+})
+
+router.get("/addclass",verifyLogin,(req,res)=>{
+  res1=req.session.data;
+  var dt=false;
+  dt=req.session.deldeperror;
+  req.session.deldeperror=false
+  dbHelper.getaddclasspage(res1).then((status1)=>{
+    if(req.session.addclasserror){
+      errerdata="Error in adding academic year please try again. check if the class is already added";
+      if(status1[0]=="erroringetting")
+    {
+      dp=status1[1];
+      sem=status1[2];
+      batch=status1[3];
+      lent=dp.length
+      res.render("inst/addclass",{res1,dt,dp,lent,sem,batch,errerdata})
+    }
+    else{
+      var ac=status1[0];
+      dp=status1[1];
+      sem=status1[2];
+      batch=status1[3];
+      lenac=ac.length
+      lend=dp.length
+      res.render("inst/addclass",{res1,dp,dt,ac,lenac,lend,sem,batch,errerdata})
+    }
+      req.session.addclasserror=false
+    }
+    else{
+      if(status1[0]=="erroringetting")
+    {
+      dp=status1[1];
+      sem=status1[2];
+      batch=status1[3];
+      lent=dp.length
+      res.render("inst/addclass",{res1,dt,dp,lent,sem,batch})
+    }
+    else{
+      var ac=status1[0];
+      dp=status1[1];
+      sem=status1[2];
+      batch=status1[3];
+      lenac=ac.length
+      lend=dp.length
+      res.render("inst/addclass",{res1,dp,dt,ac,lenac,lend,sem,batch})
+    }
+    }
+    
+  })
+  
+})
+router.post("/addclass",verifyLogin,(req,res)=>{
+  res1=req.session.data
+  dbHelper.addclass(res1,req.body).then((status1)=>{
+    if(status1=="errorinadding")
+    {
+      req.session.addclasserror=true;
+      res.redirect("/inst/addclass")
+    }
+    else if(status1=="added")
+    {
+      res.redirect("/inst/academics")
+    }
+  })
+})
+
+router.get("/getclass/:id",verifyLogin,(req,res)=>{
+  depid=parseInt(req.params.id);
+  res1=req.session.data;
+  console.log("entred")
+  var instid=parseInt(res1[0].institutionid);
+  console.log(depid,instid)
+  const query = 'SELECT class.*,teacher.name as teachername, department.departmentid, department.name as departmentname FROM class inner join department on department.departmentid=class.departmentid left join teacher on teacher.teacherid=class.teacherid WHERE class.departmentid = ? and class.institutionid=?';
+  db.query(query, [depid,instid], (error, resu) => {
+    if (error) {
+      console.error(error);
+       res.status(500).json({ error: 'Error fetching teachers' });
+    } else {
+      res.json(resu);
+      console.log(resu)
+    }
+  });
+})
+
+router.post("/deleteclass",verifyLogin,(req,res)=>{
+  res1=req.session.data;
+  dbHelper.clasdel(res1,req.body).then((status1)=>{
+    if(status1=="deletingerror")
+    {
+      req.session.deldeperror=true;
+      res.redirect("/inst/academics")
+    }
+    else{
+      req.session.deldeperror=false;
+      res.redirect("/inst/academics")
+    }
+  })
+});
+router.post("/assignclass",verifyLogin,(req,res)=>{
+  var res1=req.session.data;
+  var classid=req.body.classid;
+  var classname=req.body.classname;
+  dbHelper.getassignteacher(res1,req.body).then((status1)=>{
+    console.log(status1)
+    if(status1=="gettingerror"){
+
+    }
+    else if(status1=="noteachers")
+    {
+      var noteac="All teacher are assinged and no teacher left"
+      res.render("inst/assignclass",{res1,noteac,classid,classname})
+    }
+    else
+    {
+      var teac=status1;
+      res.render("inst/assignclass",{res1,teac,classid,classname})
+    }
+  })
+})
+router.post("/assignclass1",verifyLogin,(req,res)=>{
+  var res1=req.session.data;
+  var classid=req.body.teacherid;
+  var classname=req.body.classname;
+  dbHelper.assignclass(res1,req.body).then((status1)=>{
+    if(status1=="assigningerror"){
+
+    }
+    else if(status1='assigned')
+    {
+      var teac=status1;
+      res.redirect("/inst/academics")
+    }
+  })
+})
+
+router.post("/deleteassign",verifyLogin,(req,res)=>{
+  var res1=req.session.data;
+  var classid=req.body.teacherid;
+  var classname=req.body.classname;
+  dbHelper.delassign(res1,req.body).then((status1)=>{
+    if(status1=="assigningerror"){
+
+    }
+    else if(status1='assigned')
+    {
+      var teac=status1;
+      res.redirect("/inst/academics")
+    }
+  })
+})
+
+router.get("/trip",verifyLogin,(req,res)=>{
+  res1=req.session.data;
+  var dt=false;
+  dt=req.session.deldeperror;
+  req.session.deldeperror=false
+  dbHelper.gettrippage(res1).then((status1)=>{
+    if(status1[0]=="erroringetting")
+    {
+      ac=status1[1];
+      trip=status1[2];
+      sem=status1[3];
+      batch=status1[4]
+      
+      // lenclas=clas.length
+      res.render("inst/trip",{res1,dt,teac,trip,sem,batch})
+    }
+    else{
+      var dp=status1[0];
+      ac=status1[1];
+      trip=status1[2];
+      sem=status1[3];
+      batch=status1[4]
+      
+      res.render("inst/trip",{res1,dp,ac,trip,sem,batch,dt})
+    }
+  })
+  
+})
+router.get("/addtrip",verifyLogin,(req,res)=>{
+  res1=req.session.data;
+  var dt=false;
+  dt=req.session.deldeperror;
+  req.session.deldeperror=false
+   if(req.session.addtriperror){
+      errerdata="Error in adding academic year please try again. check if the class is already added";
+     
+      
+      res.render("inst/addtrip",{res1,errerdata})
+   
+      req.session.addtriperror=false
+    }
+    else{
+    
+   
+      res.render("inst/addtrip",{res1})
+    
+    }
+    
+  
+  
+})
+router.post("/addtrip",verifyLogin,(req,res)=>{
+  res1=req.session.data
+  dbHelper.addtrip(res1,req.body).then((status1)=>{
+    if(status1=="errorinadding")
+    {
+      req.session.addtriperror=true;
+      res.redirect("/inst/addtrip")
+    }
+    else if(status1=="added")
+    {
+      res.redirect("/inst/trip")
+    }
+  })
+})
+
+
+router.post("/assignbus",verifyLogin,(req,res)=>{
+  var res1=req.session.data;
+  var tripid=req.body.tripid;
+  var tripname=req.body.tripname;
+  dbHelper.getassignbus(res1,req.body).then((status1)=>{
+    console.log(status1)
+    if(status1=="gettingerror"){
+
+    }
+    else if(status1=="nobus")
+    {
+      var noteac="All bus are assinged and no teacher left"
+      res.render("inst/assignbus",{res1,noteac,tripid,tripname})
+    }
+    else
+    {
+      var bus=status1;
+      res.render("inst/assignbus",{res1,bus,tripname,tripid})
+    }
+  })
+})
+router.post("/assignclass1",verifyLogin,(req,res)=>{
+  var res1=req.session.data;
+  var classid=req.body.teacherid;
+  var classname=req.body.classname;
+  dbHelper.assignclass(res1,req.body).then((status1)=>{
+    if(status1=="assigningerror"){
+
+    }
+    else if(status1='assigned')
+    {
+      var teac=status1;
+      res.redirect("/inst/academics")
+    }
+  })
 })
 module.exports = router;

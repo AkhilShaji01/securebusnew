@@ -1511,10 +1511,10 @@
                         </div>
                       </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="color: rgb(4, 71, 76);">
                       
                       {{#each dp}}
-                      <button class="dropdown-item"   onclick="fetchTeachersByDepartment('{{this.departmentid}}')">{{this.name}}</button>
+                      <button class="dropdown-item"   onclick="fetchTeachersByDepartment('{{this.departmentid}}')" id="telist{{this.departmentid}}">{{this.name}}</button>
                       {{/each}}
                     </div>
                   </div>
@@ -1541,6 +1541,7 @@
 
   function fetchTeachersByDepartment(department) {
     const url = `/inst/teachers/${department}`;
+    
   const dttr = document.getElementById("dtt");
     // Make an AJAX request to the API endpoint
     fetch(url)
@@ -1548,7 +1549,9 @@
       .then(data => {
         // Clear previous teachers data
         let dtt1='';
+        
         dttr.innerHTML = dtt1;
+        
         data.forEach(function(teacher) {
           dtt1 += `<tr>
           <td>${teacher.name}</td>
